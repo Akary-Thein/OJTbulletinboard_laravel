@@ -1296,6 +1296,8 @@ pre code {
     -webkit-box-flex: 0;
             flex: 0 0 16.6666666667%;
     max-width: 16.6666666667%;
+    display:flex;
+    justify-content: center;
   }
 
   .col-md-3 {
@@ -1985,7 +1987,7 @@ pre code {
 .table th,
 .table td {
   padding: 0.75rem;
-  vertical-align: top;
+  vertical-align: middle;
   border-top: 1px solid #dee2e6;
 }
 
@@ -2392,7 +2394,9 @@ pre code {
 
 .form-control:disabled,
 .form-control[readonly] {
-  background-color: #e9ecef;
+  /* background-color: #e9ecef; */
+  border: none;
+  outline: none;
   opacity: 1;
 }
 
@@ -2898,6 +2902,10 @@ fieldset:disabled a.btn {
   color: #fff;
   background-color: #3490dc;
   border-color: #3490dc;
+}
+
+.w80{
+    width: 80%;
 }
 
 .btn-primary:hover {
@@ -4761,6 +4769,14 @@ input[type=button].btn-block {
   padding: 0.5rem 1rem;
 }
 
+.navbar-fixed-bottom {
+    margin-top:20px;
+    /* position: fixed;
+    bottom: 0;
+    width: 100%; */
+}
+
+
 .navbar .container,
 .navbar .container-fluid,
 .navbar .container-sm,
@@ -5509,6 +5525,7 @@ input[type=button].btn-block {
 .pagination {
   display: -webkit-box;
   display: flex;
+  justify-content: center;
   padding-left: 0;
   list-style: none;
   border-radius: 0.25rem;

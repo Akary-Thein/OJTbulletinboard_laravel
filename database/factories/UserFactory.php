@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\User;
+use App\Post;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -18,9 +19,11 @@ use Illuminate\Support\Str;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        // 'name' => '$faker->name',
+        // 'email' => $faker->unique()->safeEmail,
+        'name' => 'Admin',
+        'email' => 'admin@gmail.com',
+        'password' => '$2y$12$QbDu1X.nhAzO1M2ynNtW3uyjkuPSi09VijhQUkGGgbcvpm87U/1ju', // password
         'profile' => Str::random(10).'.jpg',
         'type' => 1,
         'phone' => $faker->phoneNumber,
@@ -32,5 +35,20 @@ $factory->define(User::class, function (Faker $faker) {
         'created_at'=> now(),
         'updated_at'=> now(),
         'remember_token' => Str::random(10),
+    ];
+});
+
+
+$factory->define(Post::class, function (Faker $faker) {
+    return [
+        'title' => $faker->catchPhrase,
+        'description' => $faker->text($maxNbChars = 100),
+        'status' => 1,
+        'create_user_id' => $faker->numberBetween($min = 2, $max = 7),
+        'updated_user_id' => $faker->numberBetween($min = 2, $max = 7),
+        'deleted_user_id' => $faker->numberBetween($min = 2, $max = 7),
+        'created_at' => now(),
+        'updated_at' => now(),
+        'deleted_at' => $faker->date,
     ];
 });

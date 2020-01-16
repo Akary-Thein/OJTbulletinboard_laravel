@@ -22,4 +22,3 @@
 </div>
 @endsection
 
-<p>Enter your name</p>

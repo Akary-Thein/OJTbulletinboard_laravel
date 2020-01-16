@@ -23,6 +23,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('header');
+        return view('users/user_list');
     }
 }
