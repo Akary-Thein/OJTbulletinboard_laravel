@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-12">
@@ -8,26 +9,43 @@
         <div class="card-header">Post List</div>
 
         <div class="card-body">
+          <div class="row">
 
-          <div class="form-group row">
-            <div class="col-md-4">
-              <input id="search" type="text" class="form-control @error('search') is-invalid @enderror" name="search" value="{{ old('search') }}" required autocomplete="search" autofocus>
+
+                  <div class="col-md-5">
+                    <form action="/searchpost" method="get">
+                    @csrf
+                      <div class="form-group row">
+                        <input id="search" type="text" class="form-control col-md-5 offset-md-1" name="search" value="{{ request('search') }}" autocomplete="search" autofocus>
+                        <div class="col-md-5 offset-md-1">
+                        <button type="submit" class="btn btn-primary w100">{{ __('Search') }}</button>
+                        </div>
+                      </div>
+                </form>
+                </div>
+             <div class="form-group col-md-2">
+             <a class="btn btn-primary w100" href="{{ route('posts.create') }}">{{ __('Add') }}</a>
+              </div>
+            <div class="form-group col-md-2">
+            <!-- <form method='post' action='/importExportView' class="w100">
+              @csrf -->
+              <a class="btn btn-primary w100" href="{{ url('importExportView') }}">{{ __('Upload') }}</a>
+              <!-- <button type="submit" class="btn btn-primary w100">{{ __('Upload') }}</button>
+            </form> -->
             </div>
-            <div class="col-md-2">
-              <button type="submit" class="btn btn-primary w80">{{ __('Search') }}</button>
+
+            <div class="form-group col-md-2">
+              <form method='post' action="/export" class="w100">
+              @csrf
+              <button type="submit" class="btn btn-primary w100">{{ __('Download') }}</button>
+              </form>
             </div>
-            <div class="col-md-2">
-              <button type="submit" class="btn btn-primary w80">{{ __('Add') }}</button>
-            </div>
-            <div class="col-md-2">
-              <button type="submit" class="btn btn-primary w80">{{ __('Upload') }}</button>
-            </div>
-            <div class="col-md-2">
-              <button type="submit" class="btn btn-primary w80">{{ __('Download') }}</button>
-            </div>
-          </div>
+           </div>
+
 
           <!-- Table -->
+          @if(isset($details))
+          <p> The Search results for your query <b> {{ $query ?? '' }} </b> are :</p>
           <table class="table table-striped">
             <thead>
               <tr>
@@ -39,183 +57,36 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+            @foreach ($details as $post)
+            <tr>
+            <td><a class="nav-link" href="{{ route('posts.show',$post->id) }}">{{ $post->title }}</a></td>
+                <!-- <td><button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#yourModal">
+                   <a class="nav-link" href="{{ route('posts.show',$post->id) }}" data-toggle="modal" data-target="#yourModal">{{ $post->title }}</a>
+                </td> -->
+                <td>{{ $post->description }}</td>
+                <td>{{ $post->create_user_id }}</td>
+                <td>{{ date('Y/m/d', strtotime($post->created_at)) }}</td>
                 <td>
-                  <a class="nav-link" href="{{ url('Tilte1') }}" data-toggle="modal" data-target="#exampleModal">{{ __('Tilte 1') }}</a>
-                </td>
-                <td>Description 1</td>
-                <td>User 1</td>
-                <td>2019/05/10</td>
-                <td>
-                  <a class="nav-link" href="{{ url('update_post') }}">{{ __('Edit') }}</a>
-                </td>
-                <td>
-                  <a class="nav-link" href="{{ url('Delete') }}">{{ __('Delete') }}</a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a class="nav-link" href="{{ url('Tilte2') }}">{{ __('Tilte 2') }}</a>
-                </td>
-                <td>Description 2</td>
-                <td>User 1</td>
-                <td>2019/05/04</td>
-                <td>
-                  <a class="nav-link" href="{{ url('Edit') }}">{{ __('Edit') }}</a>
+                  <a class="btn btn-primary" href="{{ route('posts.edit',$post->id) }}">{{ __('Edit') }}</a>
                 </td>
                 <td>
-                  <a class="nav-link" href="{{ url('Delete') }}">{{ __('Delete') }}</a>
+                  <form id="frm_{{$post->id}}" action="{{ route('posts.destroy',$post->id) }}" method="post">
+                    <input type="hidden" name="_method" value="delete"/>
+                      @csrf
+                        <a class="btn btn-danger" title="Delete"
+                           href="javascript:if(confirm('Are you sure you want to delete this post?')) $('#frm_{{$post->id}}').submit()">
+                            {{ __('Delete') }}
+                        </a>
+                  </form>
                 </td>
               </tr>
-              <tr>
-                <td>
-                  <a class="nav-link" href="{{ url('Tilte3') }}">{{ __('Tilte 3') }}</a>
-                </td>
-                <td>Description 3</td>
-                <td>User 1</td>
-                <td>2019/04/10</td>
-                <td>
-                  <a class="nav-link" href="{{ url('Edit') }}">{{ __('Edit') }}</a>
-                </td>
-                <td>
-                  <a class="nav-link" href="{{ url('Delete') }}">{{ __('Delete') }}</a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a class="nav-link" href="{{ url('Tilte4') }}">{{ __('Tilte 4') }}</a>
-                </td>
-                <td>Description 4</td>
-                <td>User 2</td>
-                <td>2019/03/10</td>
-                <td>
-                  <a class="nav-link" href="{{ url('Edit') }}">{{ __('Edit') }}</a>
-                </td>
-                <td>
-                  <a class="nav-link" href="{{ url('Delete') }}">{{ __('Delete') }}</a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a class="nav-link" href="{{ url('Tilte5') }}">{{ __('Tilte 5') }}</a>
-                </td>
-                <td>Description 5</td>
-                <td>User 2</td>
-                <td>2019/02/10</td>
-                <td>
-                  <a class="nav-link" href="{{ url('Edit') }}">{{ __('Edit') }}</a>
-                </td>
-                <td>
-                  <a class="nav-link" href="{{ url('Delete') }}">{{ __('Delete') }}</a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a class="nav-link" href="{{ url('Tilte6') }}">{{ __('Tilte 6') }}</a>
-                </td>
-                <td>Description 6</td>
-                <td>User 2</td>
-                <td>2019/02/09</td>
-                <td>
-                  <a class="nav-link" href="{{ url('Edit') }}">{{ __('Edit') }}</a>
-                </td>
-                <td>
-                  <a class="nav-link" href="{{ url('Delete') }}">{{ __('Delete') }}</a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a class="nav-link" href="{{ url('Tilte7') }}">{{ __('Tilte 7') }}</a>
-                </td>
-                <td>Description 7</td>
-                <td>User 2</td>
-                <td>2019/10/01</td>
-                <td>
-                  <a class="nav-link" href="{{ url('Edit') }}">{{ __('Edit') }}</a>
-                </td>
-                <td>
-                  <a class="nav-link" href="{{ url('Delete') }}">{{ __('Delete') }}</a>
-                </td>
-              </tr>
+              @endforeach
             </tbody>
           </table>
-
-          <!-- Pagination -->
-          <nav aria-label="Page navigation example">
-            <ul class="pagination">
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                  <span class="sr-only">Previous</span>
-                </a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#">1</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#">2</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#">3</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                  <span class="sr-only">Next</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
-
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Post Detail</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <div class="container-fluid">
-                    <div class="row">
-                      <div class="col-md-4">Tilte</div>
-                      <div class="col-md-4 ml-auto">Title 1</div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">Description</div>
-                      <div class="col-md-4 ml-auto">This is title 1</div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">Status</div>
-                      <div class="col-md-4 ml-auto">Active</div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">Created At</div>
-                      <div class="col-md-4 ml-auto">2019/05/10</div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">Created User</div>
-                      <div class="col-md-4 ml-auto">User 1</div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">Last Updated At</div>
-                      <div class="col-md-4 ml-auto">2019/07/10</div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">Updated User</div>
-                      <div class="col-md-4 ml-auto">User2</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
+          {!! $details->links() !!}
+          @else
+            {{ $message }}
+          @endif
         </div>
       </div>
     </div>

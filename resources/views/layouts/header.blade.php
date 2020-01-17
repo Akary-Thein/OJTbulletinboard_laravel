@@ -17,7 +17,7 @@
           <a class="nav-link" href="{{ url('user_profile') }}">{{ __('User') }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url('post_list') }}">{{ __('Posts') }}</a>
+          <a class="nav-link" href="{{ route('posts.index') }}">{{ __('Posts') }}</a>
         </li>
       </ul>
 

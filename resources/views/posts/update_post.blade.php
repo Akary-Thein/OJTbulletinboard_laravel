@@ -8,13 +8,14 @@
         <div class="card-header">Update Post</div>
 
         <div class="card-body">
-          <form method="POST" action="{{ route('login') }}">
+          <form method="POST" action="{{ route('posts.update', $post->id) }}">
           @csrf
+          @method('PATCH')
             <div class="form-group row">
               <label for="title" class="col-md-3 col-form-label text-md-left">{{ __('Title') }}</label>
 
               <div class="col-md-3">
-                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="Post 1" required autocomplete="tilte" autofocus>
+                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ $post->title }}" autocomplete="tilte" autofocus>
 
                   @error('title')
                     <span class="invalid-feedback" role="alert">
@@ -30,11 +31,11 @@
               <label for="description" class="col-md-3 col-form-label text-md-left">{{ __('Description') }}</label>
 
               <div class="col-md-3">
-                <textarea class="form-control @error('description') is-invalid @enderror" id="description" rows="3" name="description">Description for Post 1</textarea>
-                  
+                <textarea class="form-control @error('description') is-invalid @enderror" id="description" rows="3" name="description">{{ $post->description }}</textarea>
+
                   @error('description')
                     <span class="invalid-feedback" role="alert">
-                        strong>{{ $message }}</strong>
+                        <strong>{{ $message }}</strong>
                     </span>
                   @enderror
               </div>

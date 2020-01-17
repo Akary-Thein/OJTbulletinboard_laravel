@@ -2904,8 +2904,8 @@ fieldset:disabled a.btn {
   border-color: #3490dc;
 }
 
-.w80{
-    width: 80%;
+.w100{
+    width: 100%;
 }
 
 .btn-primary:hover {
