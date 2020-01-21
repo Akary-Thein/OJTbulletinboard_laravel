@@ -8,7 +8,7 @@
         <div class="card-header">Upload CSV File</div>
 
         <div class="card-body">
-            <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('posts.uploadPost') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group row">
               <label for="import_file" class="col-md-3 col-form-label text-md-left">{{ __('Import File From') }}</label>

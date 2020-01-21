@@ -12,12 +12,14 @@
           @csrf
             <div class="form-group row">
               <label for="title" class="col-md-3 col-form-label text-md-left">{{ __('Title') }}</label>
-              <label for="title" class="col-md-3 col-form-label text-md-left" >{{ $post['title'] }}</label>
+              <input type="hidden" name="title" value="{{ $post['title'] }}">
+              <label class="col-md-3 col-form-label text-md-left">{{ $post['title'] }}</label>    
             </div>
 
             <div class="form-group row">
               <label for="description" class="col-md-3 col-form-label text-md-left">{{ __('Description') }}</label>
-              <label for="title" class="col-md-6 col-form-label text-md-left">{{ $post['description'] }}</label>
+              <input type="hidden" name="description" value="{{ $post['description'] }}">
+              <label class="col-md-3 col-form-label text-md-left">{{ $post['description'] }}</label>              
             </div>
 
             <div class="form-group row mb-0">

@@ -76,7 +76,9 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 
 Route::resource('posts', 'PostController');
-Route::get('/searchpost','PostController@searchpost');
-Route::post('/export','PostController@export');
-Route::get('importExportView', 'PostController@importExportView');
-Route::post('import', 'PostController@import')->name('import');
+Route::post('/confirmpost', 'PostController@confirmPostCreateForm')->name('posts.confirmPostCreateForm');
+Route::get('/searchpost', 'PostController@searchPost')->name('posts.searchPost');
+Route::post('/downloadpost','PostController@downloadPost')->name('posts.downloadPost');
+Route::get('/uploadpostform', 'PostController@uploadPostForm')->name('posts.uploadPostForm');
+Route::post('/uploadpost', 'PostController@uploadPost')->name('posts.uploadPost');
+

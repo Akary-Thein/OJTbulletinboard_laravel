@@ -26,19 +26,33 @@ class PostController extends Controller
         return view('posts.create_post');
     }
 
+    public function confirmPostCreateForm(Request $request)
+    {
+        $validatedData = $request->validate([
+            'title' => ['required', 'unique:posts', 'max:255'],
+            'description' => ['required'],
+        ]);
+
+        return view('posts.create_post_confirm')->with('post',$validatedData);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     { 
-        Post::create([
-            'title' => $request['title'],
-             'description' => $request['description'],
-             'create_user_id' => 7,
-             'updated_user_id' => 7,
-                 ]);
-         
-                 return redirect()->route('posts.index')
-                 ->with('success','Product created successfully.');
+        $post = new Post;
+        $post->title = $request['title'];
+        $post->description = $request['description'];
+        $post->create_user_id = auth()->user()->id;
+        $post->updated_user_id = auth()->user()->id;
+        $post->save();
+        return redirect()->route('posts.index');
     }
-  
+
     /**
      * Display the specified resource.
      *
@@ -51,10 +65,20 @@ class PostController extends Controller
     //     return view('posts.show_detail', compact('post'));
     // }
 
+    // public function show($id)
+    // {
+    //   $post = Post::findOrFail($id);
+    //   dd($post);
+    //   return redirect('posts');
+    // //   return view('posts.show_detail', compact('post'));
+    //return view('posts.post_list', compact('posts'));
+    // }
+
     public function show($id)
     {
-      $post = Post::findOrFail($id);
-      return view('posts.show_detail', compact('post'));
+        $posts = Post::find($id);
+        dd($posts);
+        return view('posts.post_list', compact('posts'));
     }
 
     /**
@@ -96,13 +120,15 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
+    {  
+        $post = new Post;
         $post = Post::findOrFail($id);
         $post->delete();
+        $post->deleted_user_id = auth()->user()->id;
         return redirect('posts')->with('success', 'post deleted successfully');
     }
 
-    public function searchpost(Request $request)
+    public function searchPost(Request $request)
     {
         $search = trim($request->get('search'));
         $field = ['id','title','description'];
@@ -135,7 +161,7 @@ public function actions(Request $request)
 }
 
  // Export data
- public function export(Request $request){
+ public function downloadPost(Request $request){
 
        return Excel::download(new PostsExport, "post-list-" .date('d-m-Y') .".xlsx");    
  
@@ -144,12 +170,12 @@ public function actions(Request $request)
 /**
     * @return \Illuminate\Support\Collection
     */
-    public function importExportView()
+    public function uploadPostForm()
     {
        return view('posts.upload_csv');
     }
 
-    public function import() 
+    public function uploadPost() 
     {
         Excel::import(new PostsImport,request()->file('import_file'));
            

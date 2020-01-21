@@ -23,10 +23,10 @@
               <input id="created_to" type="text" class="form-control @error('created_to') is-invalid @enderror" name="created_to" value="{{ old('created_to') }}" required autocomplete="created_to" placeholder="Created To" autofocus>
             </div>
             <div class="col-md-2">
-              <button type="submit" class="btn btn-primary w80">{{ __('Search') }}</button>
+              <button type="submit" class="btn btn-primary w100">{{ __('Search') }}</button>
             </div>
             <div class="col-md-2">
-              <button type="submit" class="btn btn-primary w80">{{ __('Add') }}</button>
+              <button type="submit" class="btn btn-primary w100">{{ __('Add') }}</button>
             </div>
           </div>
 

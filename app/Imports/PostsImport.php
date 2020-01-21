@@ -19,11 +19,8 @@ class PostsImport implements ToModel, WithHeadingRow
             'title' => $row['title'],
             'description' => $row['description'],
             'status' => 1,
-            'create_user_id' => 3,
-            'updated_user_id' => 3,
-            'deleted_user_id' => 3,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'create_user_id' => auth()->user()->id,
+            'updated_user_id' => auth()->user()->id,
         ]);
     }
 }

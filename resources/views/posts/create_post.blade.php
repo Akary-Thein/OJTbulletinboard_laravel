@@ -8,7 +8,7 @@
         <div class="card-header">Create Post</div>
 
         <div class="card-body">
-          <form method="POST" action="{{ route('posts.store') }}" >
+          <form method="POST" action="{{ route('posts.confirmPostCreateForm') }}" >
           @csrf
             <div class="form-group row">
               <label for="title" class="col-md-3 col-form-label text-md-left">{{ __('Title') }}</label>
@@ -31,7 +31,7 @@
 
               <div class="col-md-3">
                 <textarea class="form-control @error('description') is-invalid @enderror" id="description" rows="3" name="description"></textarea>
-                  
+
                   @error('description')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
