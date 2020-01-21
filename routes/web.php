@@ -82,3 +82,4 @@ Route::post('/downloadpost','PostController@downloadPost')->name('posts.download
 Route::get('/uploadpostform', 'PostController@uploadPostForm')->name('posts.uploadPostForm');
 Route::post('/uploadpost', 'PostController@uploadPost')->name('posts.uploadPost');
 
+Route::resource('users', 'UserController');

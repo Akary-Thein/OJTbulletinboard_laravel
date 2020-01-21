@@ -44,11 +44,9 @@ $factory->define(Post::class, function (Faker $faker) {
         'title' => $faker->catchPhrase,
         'description' => $faker->text($maxNbChars = 100),
         'status' => 1,
-        'create_user_id' => $faker->numberBetween($min = 2, $max = 7),
-        'updated_user_id' => $faker->numberBetween($min = 2, $max = 7),
-        'deleted_user_id' => $faker->numberBetween($min = 2, $max = 7),
+        'create_user_id' => 3,
+        'updated_user_id' => 3,
         'created_at' => now(),
         'updated_at' => now(),
-        'deleted_at' => $faker->date,
     ];
 });

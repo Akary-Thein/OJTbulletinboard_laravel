@@ -10,15 +10,18 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <!-- Left Side Of Navbar -->
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url('user_list') }}">{{ __('Users') }}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url('user_profile') }}">{{ __('User') }}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ route('posts.index') }}">{{ __('Posts') }}</a>
-        </li>
+        @if(Auth::user()->type == 0)
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url('user_list') }}">{{ __('Users') }}</a>
+          </li>
+        @else
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url('user_profile') }}">{{ __('User') }}</a>
+          </li>
+        @endif
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('posts.index') }}">{{ __('Posts') }}</a>
+          </li>
       </ul>
 
       <!-- Right Side Of Navbar -->

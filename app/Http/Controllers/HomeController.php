@@ -23,6 +23,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('users/user_list');
+        if(auth()->user()->type == 0){
+          return view('users/user_list');
+        }
+        else{
+          return view('users/user_profile');
+        }
     }
 }

@@ -10,14 +10,36 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class PostController extends Controller
 {
+     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $request)
     {    
-        $posts = Post::latest()->paginate(10);
-        if(count($posts)>0){
-            return view('posts.post_list')->withDetails($posts);
+        if(auth()->user()->type==0){
+          $posts = Post::latest()->paginate(10);
+          if(count($posts)>0){
+            return view('posts.post_list')->with('posts',$posts);
+          }
+          else{
+            return view('posts.post_list')->with('error','No Posts found!!');  
+          }
         }
         else{
-            return view('posts.post_list', compact('posts'))->withMessage('No Posts found!!');  
+            $currentuser = auth()->user()->id;
+            $posts = Post::where('create_user_id', $currentuser)->latest()->paginate(10);
+           if(count($posts)>0){
+             return view('posts.post_list')->with('posts',$posts);
+           }
+           else{
+             return view('posts.post_list')->with('error','No Posts found!!');  
+           }
         }
     }
 
@@ -116,22 +138,34 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Post  $post
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {  
-        $post = new Post;
         $post = Post::findOrFail($id);
-        $post->delete();
-        $post->deleted_user_id = auth()->user()->id;
+        //dd($post);
+        if ($post) {
+            $post->delete(); 
+            Post::whereNotNull('deleted_user_id')->update([
+                'deleted_user_id' => auth()->user()->id,
+            ]); 
+        
+            // Post::where('deleted_user_id', '')->update([
+            //     'deleted_user_id' => auth()->user()->id,
+            // ]); 
+             
+            // Post::whereNull('deleted_user_id')->update([
+            //     'deleted_user_id' => auth()->user()->id,
+            // ]);
+        }
+        
         return redirect('posts')->with('success', 'post deleted successfully');
     }
 
     public function searchPost(Request $request)
     {
         $search = trim($request->get('search'));
-        $field = ['id','title','description'];
         $posts = Post::where('title', 'like', '%' . $search . '%')
         ->orwhere('description', 'like', '%' . $search . '%')
         ->orwhere('create_user_id', 'like', '%' . $search . '%')
@@ -139,10 +173,10 @@ class PostController extends Controller
         ->paginate(10)
         ->withPath('?search=' . $search);
            if(count($posts)>0){
-            return view('posts.post_list')->withDetails($posts)->withQuery ( $search );
+            return view('posts.post_list')->with('posts',$posts)->withQuery ( $search );
            }
            else{
-            return view('posts.post_list', compact('posts'))->withMessage('No Posts found. Try to search again !');;  
+            return view('posts.post_list')->with('error','No Posts found. Try to search again !');;  
          }
     }
 
