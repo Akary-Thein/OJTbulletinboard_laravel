@@ -1,9 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\User;
 
 class Post extends Model 
 { 
@@ -12,6 +13,6 @@ class Post extends Model
     protected $fillable = ['title', 'description', 'status' ,'create_user_id', 'updated_user_id', 'deleted_user_id'];
 
     public function user() {
-        return $this->belongsTo('App\User','create_user_id');
+        return $this->belongsTo(User::class,'create_user_id');
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\User;
-use App\Post;
+use App\Models\User;
+use App\Models\Post;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -44,8 +44,8 @@ $factory->define(Post::class, function (Faker $faker) {
         'title' => $faker->catchPhrase,
         'description' => $faker->text($maxNbChars = 100),
         'status' => 1,
-        'create_user_id' => 3,
-        'updated_user_id' => 3,
+        'create_user_id' => 7,
+        'updated_user_id' => 7,
         'created_at' => now(),
         'updated_at' => now(),
     ];

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
+// use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Log;
 
 class LoginController extends Controller
 {
@@ -18,7 +20,7 @@ class LoginController extends Controller
     | redirecting them to your home screen. The controller uses a trait
     | to conveniently provide its functionality to your applications.
     |
-    */
+     */
 
     use AuthenticatesUsers;
 
@@ -27,7 +29,8 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/users';
+    // protected $redirectTo = RouteServiceProvider::USER;
 
     /**
      * Create a new controller instance.
@@ -39,4 +42,27 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-}
+    public function login(Request $request)
+    {
+  
+        if (Auth::attempt($request->validate([
+            'email' => 'required','max:50',
+            'password' => 'required','max:50',])
+        )){
+            Log::info("Login succeeded");
+  
+             return redirect()->intended('users');
+        }
+    //   if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+    //     // Authentication passed...
+    //     Log::info("Login succeeded");
+  
+    //     return redirect()->intended('users');
+    //   }
+      Log::info("Login failed");
+      return redirect()->intended('login')
+        ->with('loginError', 'Email or password is incorrect!');
+  
+    }
+
+} 

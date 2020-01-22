@@ -15,71 +15,13 @@ Route::get('/', function () {
     return view('auth/login');
 });
 
-// Route::get('/home', function () {
-//     return view('home');
-// });
-
-// Route::get('/post_list', function () {
-//     return view('posts/post_list');
-// });
-
-// Route::get('/create_post', function () {
-//     return view('posts/create_post');
-// });
-
-// Route::get('/create_post_confirm', function () {
-//     return view('posts/create_post_confirm');
-// });
-
-// Route::get('/update_post', function () {
-//     return view('posts/update_post');
-// });
-
-// Route::get('/update_post_confirm', function () {
-//     return view('posts/update_post_confirm');
-// });
-
-// Route::get('/upload_csv', function () {
-//     return view('posts/upload_csv');
-// });
-
-// Route::get('/user_list', function () {
-//     return view('users/user_list');
-// });
-
-// Route::get('/create_user', function () {
-//     return view('users/create_user');
-// });
-
-// Route::get('/create_user_confirm', function () {
-//     return view('users/create_user_confirm');
-// });
-
-// Route::get('/user_profile', function () {
-//     return view('users/user_profile');
-// });
-
-// Route::get('/update_user', function () {
-//     return view('users/update_user');
-// });
-
-// Route::get('/update_user_confirm', function () {
-//     return view('users/update_user_confirm');
-// });
-
-// Route::get('/change_password', function () {
-//     return view('users/change_password');
-// });
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::resource('users', 'User\UserController');
 
-Route::resource('posts', 'PostController');
-Route::post('/confirmpost', 'PostController@confirmPostCreateForm')->name('posts.confirmPostCreateForm');
-Route::get('/searchpost', 'PostController@searchPost')->name('posts.searchPost');
-Route::post('/downloadpost','PostController@downloadPost')->name('posts.downloadPost');
-Route::get('/uploadpostform', 'PostController@uploadPostForm')->name('posts.uploadPostForm');
-Route::post('/uploadpost', 'PostController@uploadPost')->name('posts.uploadPost');
-
-Route::resource('users', 'UserController');
+Route::resource('posts', 'Post\PostController');
+Route::post('/confirmpost', 'Post\PostController@confirmPostCreateForm')->name('posts.confirmPostCreateForm');
+Route::get('/searchpost', 'Post\PostController@searchPost')->name('posts.searchPost');
+Route::post('/downloadpost','Post\PostController@downloadPost')->name('posts.downloadPost');
+Route::get('/uploadpostform', 'Post\PostController@uploadPostForm')->name('posts.uploadPostForm');
+Route::post('/uploadpost', 'Post\PostController@uploadPost')->name('posts.uploadPost');
