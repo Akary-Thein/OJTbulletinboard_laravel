@@ -40,7 +40,7 @@
           </div>
 
           <!-- Table -->
-          @if(isset($posts))
+          @if(isset($postList))
           <table class="table table-striped">
             <thead>
               <tr>
@@ -52,7 +52,7 @@
               </tr>
             </thead>
             <tbody>
-              @foreach ($posts as $post)
+              @foreach ($postList as $post)
               <tr>
                 <td>
                   <a href="#" class="nav-link" data-toggle="modal" data-target="#showmodal" 
@@ -82,9 +82,9 @@
               @endforeach
             </tbody>
           </table>
-          {!! $posts->links() !!}
+          {!! $postList->links() !!}
           @else
-            {{$error}}
+            {{$errors}}
           @endif
           
 

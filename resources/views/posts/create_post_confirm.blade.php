@@ -29,7 +29,7 @@
                 </button>
               </div>
               <div class="col-md-1">
-                <button type="submit" class="btn btn-outline-success">
+                <button type="submit" class="btn btn-outline-success" value="cancel" name='action'> 
                   {{ __('Cancel') }}
                 </button>
               </div>

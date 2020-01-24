@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-// use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,27 +41,34 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+
     public function login(Request $request)
     {
-  
-        if (Auth::attempt($request->validate([
-            'email' => 'required','max:50',
-            'password' => 'required','max:50',])
-        )){
-            Log::info("Login succeeded");
-  
-             return redirect()->intended('users');
-        }
-    //   if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-    //     // Authentication passed...
-    //     Log::info("Login succeeded");
-  
-    //     return redirect()->intended('users');
-    //   }
-      Log::info("Login failed");
-      return redirect()->intended('login')
-        ->with('loginError', 'Email or password is incorrect!');
-  
+    $this->validate($request, [
+        'email' => ['required', 'string', 'email', 'max:50'],
+        'password' => ['required', 'string', 'max:50'] ,
+    ]);
+
+    $remember_me = $request->has('remember') ? true : false; 
+
+    if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $remember_me)) {
+        $user = Auth::user();
+        Log::info("Login succeeded");
+       return redirect()->intended('users');
     }
+    else{
+        Log::info("Login failed");
+        return redirect()->intended('login')
+           ->with('loginError', 'Email or password is incorrect!');
+    }
+   }
 
 } 
+
+
+
+
+
+
+
+

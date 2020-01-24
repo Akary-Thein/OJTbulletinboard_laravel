@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Post;
 
 use App\Models\Post;
+use App\Contracts\Services\Post\PostServiceInterface;
+use App\Http\Requests\PostRequest;
 use Illuminate\Http\Request;
 use App\Exports\PostsExport;
 use App\Imports\PostsImport;
@@ -11,36 +13,36 @@ use App\Http\Controllers\Controller;
 
 class PostController extends Controller
 {
-     /**
+    private $postInterface;
+
+    /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(PostServiceInterface $postInterface)
     {
         $this->middleware('auth');
+        $this->postInterface = $postInterface;
     }
 
-    public function index(Request $request)
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {    
-        if(auth()->user()->type==0){
-          $posts = Post::latest()->paginate(10);
-          if(count($posts)>0){
-            return view('posts.post_list')->with('posts',$posts);
-          }
-          else{
-            return view('posts.post_list')->with('error','No Posts found!!');  
-          }
+        $postList = $this->postInterface->getPostList();
+        if(count($postList)>0)
+        {
+            return view('posts.post_list', [
+                'postList' => $postList,
+            ]);  
         }
-        else{
-            $currentuser = auth()->user()->id;
-            $posts = Post::where('create_user_id', $currentuser)->latest()->paginate(10);
-           if(count($posts)>0){
-             return view('posts.post_list')->with('posts',$posts);
-           }
-           else{
-             return view('posts.post_list')->with('error','No Posts found!!');  
-           }
+        else
+        {
+            return view('posts.post_list')->with('error','No Posts found!!');  
         }
     }
 
@@ -49,14 +51,13 @@ class PostController extends Controller
         return view('posts.create_post');
     }
 
-    public function confirmPostCreateForm(Request $request)
+    public function confirmPostCreateForm(PostRequest $request)
     {
-        $validatedData = $request->validate([
-            'title' => ['required', 'unique:posts', 'max:255'],
-            'description' => ['required'],
-        ]);
+        $validated = $request->validated();
 
-        return view('posts.create_post_confirm')->with('post',$validatedData);
+        return view('posts.create_post_confirm', [
+            'post' => $validated,
+        ]);  
     }
 
     /**
@@ -67,15 +68,23 @@ class PostController extends Controller
      */
     public function store(Request $request)
     { 
-        $post = new Post;
-        $post->title = $request['title'];
-        $post->description = $request['description'];
-        $post->create_user_id = auth()->user()->id;
-        $post->updated_user_id = auth()->user()->id;
-        $post->save();
-        return redirect()->route('posts.index');
+        switch($request['action']){
+            case 'create':
+                $this->postInterface->createPost([
+                    'title' => $request['title'],
+                    'description' => $request['description'],
+                    'create_user_id' => auth()->user()->id,
+                    'updated_user_id' => auth()->user()->id,
+                ]);
+        
+                return redirect()->route('posts.index');
+            break;
+            case 'cancel':
+                return redirect()->route('posts.create')->withInput();
+            break;
+        }          
     }
-
+ 
     /**
      * Display the specified resource.
      *
@@ -123,14 +132,10 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
-      $post = $request->validate([
-         'title' => 'required',
-         'description' => 'required',
-     ]);
-  
-     Post::where('id', $id)->update($post);
+        $post = $request->validated();
+        Post::where('id', $id)->update($post);
 
      return redirect()->route('posts.index')
                      ->with('success','Product updated successfully');
@@ -144,35 +149,20 @@ class PostController extends Controller
      */
     public function destroy($id)
     {  
-        $post = Post::findOrFail($id);
-        //dd($post);
-        if ($post) {
-            $post->delete(); 
-            Post::whereNotNull('deleted_user_id')->update([
-                'deleted_user_id' => auth()->user()->id,
-            ]); 
-        
-            // Post::where('deleted_user_id', '')->update([
-            //     'deleted_user_id' => auth()->user()->id,
-            // ]); 
-             
-            // Post::whereNull('deleted_user_id')->update([
-            //     'deleted_user_id' => auth()->user()->id,
-            // ]);
-        }
-        
-        return redirect('posts')->with('success', 'post deleted successfully');
+        $this->postInterface->deletePost($id);
+        return redirect()->route('posts.index');
     }
 
     public function searchPost(Request $request)
     {
-        $search = trim($request->get('search'));
-        $posts = Post::where('title', 'like', '%' . $search . '%')
-        ->orwhere('description', 'like', '%' . $search . '%')
-        ->orwhere('create_user_id', 'like', '%' . $search . '%')
-        ->latest()
-        ->paginate(10)
-        ->withPath('?search=' . $search);
+        // $search = trim($request->get('search'));
+        // $posts = Post::where('title', 'like', '%' . $search . '%')
+        // ->orwhere('description', 'like', '%' . $search . '%')
+        // ->orwhere('create_user_id', 'like', '%' . $search . '%')
+        // ->latest()
+        // ->paginate(10)
+        // ->withPath('?search=' . $search);
+        $posts = $this->postInterface->searchPost($request);
            if(count($posts)>0){
             return view('posts.post_list')->with('posts',$posts)->withQuery ( $search );
            }

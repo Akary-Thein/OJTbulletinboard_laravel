@@ -21,20 +21,18 @@ $factory->define(User::class, function (Faker $faker) {
     return [
         // 'name' => '$faker->name',
         // 'email' => $faker->unique()->safeEmail,
-        'name' => 'Admin',
-        'email' => 'admin@gmail.com',
+        'name' => 'user01',
+        'email' => 'user01@gmail.com',
         'password' => '$2y$12$QbDu1X.nhAzO1M2ynNtW3uyjkuPSi09VijhQUkGGgbcvpm87U/1ju', // password
         'profile' => Str::random(10).'.jpg',
         'type' => 1,
         'phone' => $faker->phoneNumber,
         'address' => $faker->address,
         'dob' => $faker->date,
-        'create_user_id' => 1,
-        'updated_user_id' => 1,
-        'deleted_user_id' => 1,
+        'create_user_id' => 7,
+        'updated_user_id' => 7,
         'created_at'=> now(),
         'updated_at'=> now(),
-        'remember_token' => Str::random(10),
     ];
 });
 

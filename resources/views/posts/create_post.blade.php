@@ -14,7 +14,7 @@
               <label for="title" class="col-md-3 col-form-label text-md-left">{{ __('Title') }}</label>
 
               <div class="col-md-3">
-                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" autocomplete="title" autofocus>
+                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus>
 
                   @error('title')
                     <span class="invalid-feedback" role="alert">
@@ -27,10 +27,10 @@
             </div>
 
             <div class="form-group row">
-              <label for="description" class="col-md-3 col-form-label text-md-left">{{ __('Description') }}</label>
+              <label for="description" class="col-md-3 col-form-label text-md-left" >{{ __('Description') }}</label>
 
               <div class="col-md-3">
-                <textarea class="form-control @error('description') is-invalid @enderror" id="description" rows="3" name="description"></textarea>
+                <textarea class="form-control @error('description') is-invalid @enderror" id="description" rows="3" name="description">{{ old('description') }}</textarea>
 
                   @error('description')
                     <span class="invalid-feedback" role="alert">
