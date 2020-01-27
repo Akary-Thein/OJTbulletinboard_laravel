@@ -155,20 +155,15 @@ class PostController extends Controller
 
     public function searchPost(Request $request)
     {
-        // $search = trim($request->get('search'));
-        // $posts = Post::where('title', 'like', '%' . $search . '%')
-        // ->orwhere('description', 'like', '%' . $search . '%')
-        // ->orwhere('create_user_id', 'like', '%' . $search . '%')
-        // ->latest()
-        // ->paginate(10)
-        // ->withPath('?search=' . $search);
-        $posts = $this->postInterface->searchPost($request);
-           if(count($posts)>0){
-            return view('posts.post_list')->with('posts',$posts)->withQuery ( $search );
-           }
-           else{
-            return view('posts.post_list')->with('error','No Posts found. Try to search again !');;  
-         }
+        $postList = $this->postInterface->searchPost($request); 
+        if(count($postList)>0){
+            return view('posts.post_list', [
+            'postList' => $postList,
+            ]);
+        }
+        else{
+            return view('posts.post_list')->with('errors','No Posts found. Try to search again !');
+        }
     }
 
     /**

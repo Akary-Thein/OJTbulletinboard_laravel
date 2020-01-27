@@ -14,5 +14,5 @@ interface PostDaoInterface
   public function deletePost($id);
 
   //search post
-  public function searchPost(array $data);
+  public function searchPost($searchdata);
 }
