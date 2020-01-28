@@ -72,7 +72,12 @@
               </div>
 
               <div class="col-md-3">
-                <img id="output" src="./img/default.png" alt="default" />
+              @if(file_exists("./img/default.png"))
+              <img id="output" src="./img/default.png" alt="default" />
+                @else
+                <img src="" alt="default_img" class="w-50">
+                  @endif
+                
               </div>
 
             </div>

@@ -11,6 +11,7 @@ use App\Imports\PostsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 
+
 class PostController extends Controller
 {
     private $postInterface;
@@ -149,6 +150,9 @@ class PostController extends Controller
      */
     public function destroy($id)
     {  
+        $post = Post::find($id);
+        $post->deleted_user_id = auth()->user()->id;
+        $post->save();
         $this->postInterface->deletePost($id);
         return redirect()->route('posts.index');
     }
@@ -166,25 +170,10 @@ class PostController extends Controller
         }
     }
 
-    /**
- * Get the actions available for the resource.
- *
- * @param  \Illuminate\Http\Request $request
- *
- * @return array
- */
-public function actions(Request $request)
-{
-    return [
-        (new DownloadExcel)->withHeadings(),
-    ];
-}
 
  // Export data
  public function downloadPost(Request $request){
-
-       return Excel::download(new PostsExport, "post-list-" .date('d-m-Y') .".xlsx");    
- 
+    return Excel::download(new PostsExport(), "post-list-" .date('d-m-Y') .".xlsx");    
 }
 
 /**

@@ -19,7 +19,9 @@ class PostDao implements PostDaoInterface
             return Post::latest()->paginate(10);
         } else {
             $currentuser = auth()->user()->id;
-            return Post::where('create_user_id', $currentuser)->latest()->paginate(10);
+            return Post::where('create_user_id', $currentuser)
+                        ->latest()
+                        ->paginate(10);
         }
     }
 
@@ -36,38 +38,27 @@ class PostDao implements PostDaoInterface
     public function searchPost($searchdata)
     {
         $search = trim($searchdata->get('search'));
-
+        $currentuser = auth()->user()->id;
         if (auth()->user()->type == 0) {
-            $post_user = User::join('posts','posts.create_user_id','users.id')
-                            ->where('users.name',$search)
-                            ->pluck('posts.create_user_id')
-                            ->first();
-            
-            // return Post::join('users','posts.create_user_id','users.id')
-            // ->where('title', 'like', '%' . $search . '%')
-            // ->orwhere('description', 'like', '%' . $search . '%')
-            // ->orwhere('users.name' , 'like','%' . $search . '%')
-            // ->latest()
-            // ->paginate(10)
-            // ->withPath('?search=' . $search);
-
             return Post::where('title', 'like', '%' . $search . '%')
-                    ->orwhere('description', 'like', '%' . $search . '%')
-                    ->orwhere('create_user_id' , 'like','%' . $post_user . '%')
+                    ->orwhere('description', 'like', '%' . $search . '%')  
+                    ->orWhereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'like', '%' .$search. '%');
+                    })
                     ->latest()
                     ->paginate(10)
                     ->withPath('?search=' . $search);
         }
         else{
-            return Post::where('title', 'like', '%' . $search . '%')
-                    ->orwhere('description', 'like', '%' . $search . '%')
+            return Post::where('create_user_id', 'like', '%' . $currentuser . '%')
+                    ->where('title', 'like', '%' . $search . '%')
+                    ->orwhere('description', 'like', '%' . $search . '%') 
                     ->latest()
                     ->paginate(10)
                     ->withPath('?search=' . $search);
         }  
              
     }
-
 
 
 }
