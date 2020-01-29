@@ -9,16 +9,16 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class PostsImport implements ToModel, WithHeadingRow
 {
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
         return new Post([
             'title' => $row['title'],
             'description' => $row['description'],
-            'status' => 1,
+            'status' => $row['status'],
             'create_user_id' => auth()->user()->id,
             'updated_user_id' => auth()->user()->id,
         ]);

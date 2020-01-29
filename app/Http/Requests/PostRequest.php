@@ -26,6 +26,7 @@ class PostRequest extends FormRequest
         return [
             'title' => 'required|unique:posts|max:255',
             'description' => 'required',
+            'uploaded_file' => 'required|max:2048'
         ];
     }
 }

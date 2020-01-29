@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Post;
 
 use App\Models\Post;
 use App\Contracts\Services\Post\PostServiceInterface;
-use App\Http\Requests\PostRequest;
 use Illuminate\Http\Request;
 use App\Exports\PostsExport;
 use App\Imports\PostsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostRequest;
 
 
 class PostController extends Controller
@@ -135,6 +135,7 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, $id)
     {
+        dd("update");
         $post = $request->validated();
         Post::where('id', $id)->update($post);
 
@@ -184,10 +185,22 @@ class PostController extends Controller
        return view('posts.upload_csv');
     }
 
-    public function uploadPost() 
+    public function uploadPost(Request $request) 
     {
-        Excel::import(new PostsImport,request()->file('import_file'));
-           
+        $request->validate([
+            'uploaded_file' => 'required|max:2048|mimetypes:text/csv', 
+        ]);
+        $files = $request->file('uploaded_file');
+        $destinationPath = 'uploadedfile/'.auth()->user()->id.'/csv'; // upload path
+        $filename = $files->getClientOriginalName();
+        $extension = $files->getClientOriginalExtension();
+        // if ($extension != 'csv') {
+        //     return view('posts.upload_csv')->with('message','No Posts found. Try to search again !');
+        //     //return redirect()->back()->with('message','Product updated successfully');
+        //     //return redirect()->back()->withInvalid('The file must be a file of type: csv.');
+        // }
+        Excel::import(new PostsImport,$files);
+        $files->move($destinationPath, $filename);
         return redirect()->route('posts.index');
     }
 
